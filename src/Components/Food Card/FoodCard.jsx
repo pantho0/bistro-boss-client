@@ -3,6 +3,7 @@ import useAuth from "../Hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import useCart from "../Hooks/useCart";
 
 const FoodCard = ({ item }) => {
   const { _id, image, name, price, recipe } = item;
@@ -10,6 +11,8 @@ const FoodCard = ({ item }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
+  const [,refetch] = useCart()
+  
   const handleAddtoCart = (food) => {
     if (user && user.email) {
       const cartItem = {
@@ -17,6 +20,7 @@ const FoodCard = ({ item }) => {
         name,
         image,
         price,
+        email : user.email
       };
       axiosSecure.post('/carts', cartItem)
       .then(res=>{
@@ -29,6 +33,8 @@ const FoodCard = ({ item }) => {
                 showConfirmButton: false,
                 timer: 1500
               });
+              // refetch the cart items to real time update
+              refetch()
         }
       })
     } else {
