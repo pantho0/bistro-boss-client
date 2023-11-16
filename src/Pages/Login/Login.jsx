@@ -8,7 +8,8 @@ const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    let from = location.state?.from?.pathname || "/";
+    let from = location?.state?.from?.pathname || "/";
+    console.log('location in the state', location);
 
     useEffect(() => {
         loadCaptchaEnginge(6); 
