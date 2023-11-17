@@ -4,6 +4,8 @@ import { AuthContext } from "../../Provider/AuthProvider";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import useAxiosPublic from "../../Components/Hooks/useAxiosPublic";
+import { FaGoogle } from "react-icons/fa";
+import SocialLogin from "../Shared/Social Login/SocialLogin";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -16,7 +18,8 @@ const SignUp = () => {
 
   const axiosPublic = useAxiosPublic();
 
-  const { createUser, updateUserProfile } = useContext(AuthContext);
+  const { createUser, updateUserProfile, signInWithGoogle } = useContext(AuthContext);
+
   const onSubmit = (data) => {
     console.log(data);
     createUser(data.email, data.password)
@@ -165,6 +168,7 @@ const SignUp = () => {
                 value="Sign Up"
               />
             </div>
+           <SocialLogin></SocialLogin>
           </form>
         </div>
       </div>
