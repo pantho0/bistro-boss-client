@@ -3,9 +3,10 @@ import { useForm } from "react-hook-form";
 import { AuthContext } from "../../Provider/AuthProvider";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import useAxiosPublic from "../../Components/Hooks/useAxiosPublic";
 
 const SignUp = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -13,32 +14,41 @@ const SignUp = () => {
     formState: { errors },
   } = useForm();
 
-  const {createUser, updateUserProfile}= useContext(AuthContext)
+  const axiosPublic = useAxiosPublic();
+
+  const { createUser, updateUserProfile } = useContext(AuthContext);
   const onSubmit = (data) => {
     console.log(data);
     createUser(data.email, data.password)
-    .then(res=>{
-      console.log(res.user);
-      updateUserProfile(data.name, data.photoUrl)
-      .then(()=>{
-        console.log('User Profile Updated');
-        reset()
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "User Created Successfully",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        navigate('/')
+      .then((res) => {
+        console.log(res.user);
+        updateUserProfile(data.name, data.photoUrl)
+          .then(() => {
+            const userInfo = {
+              name: data.name,
+              email: data.email,
+            };
+            axiosPublic.post("/users", userInfo).then((res) => {
+              if (res.data.insertedId) {
+                reset();
+                Swal.fire({
+                  position: "top-end",
+                  icon: "success",
+                  title: "User Created Successfully",
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+                navigate("/");
+              }
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
-      .catch(error =>{
+      .catch((error) => {
         console.log(error);
-      })
-    })
-    .catch(error => {
-      console.log(error);
-    })
+      });
   };
 
   return (
@@ -115,22 +125,32 @@ const SignUp = () => {
                   required: true,
                   minLength: 8,
                   maxLength: 20,
-                  pattern : /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+                  pattern:
+                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
                 })}
                 placeholder="password"
                 className="input input-bordered"
               />
               {errors.password?.type === "required" && (
-                <p className="text-red-600" role="alert">Password is required</p>
+                <p className="text-red-600" role="alert">
+                  Password is required
+                </p>
               )}
               {errors.password?.type === "minLength" && (
-                <p className="text-red-600" role="alert">Password must be 8 characters</p>
+                <p className="text-red-600" role="alert">
+                  Password must be 8 characters
+                </p>
               )}
               {errors.password?.type === "maxLength" && (
-                <p className="text-red-600" role="alert">Password not more than 20 characters</p>
+                <p className="text-red-600" role="alert">
+                  Password not more than 20 characters
+                </p>
               )}
               {errors.password?.type === "pattern" && (
-                <p className="text-red-600" role="alert">Minimum eight characters, at least one letter, one number and one special character</p>
+                <p className="text-red-600" role="alert">
+                  Minimum eight characters, at least one letter, one number and
+                  one special character
+                </p>
               )}
               <label className="label">
                 <a href="#" className="label-text-alt link link-hover">
@@ -139,8 +159,11 @@ const SignUp = () => {
               </label>
             </div>
             <div className="form-control mt-6">
-              <input className="btn btn-primary" type="submit" value="Sign Up" />
-             
+              <input
+                className="btn btn-primary"
+                type="submit"
+                value="Sign Up"
+              />
             </div>
           </form>
         </div>
