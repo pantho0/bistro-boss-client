@@ -12,6 +12,7 @@ const AllUsers = () => {
       return res.data;
     },
   });
+  console.log(users);
   const handleDeleteUser = (user) => {
     Swal.fire({
         title: "Are you sure?",
@@ -78,7 +79,9 @@ const AllUsers = () => {
             <tbody className="w-full">
               {users.map((user, idx) => (
                 <tr className="w-full" key={user._id}>
-                  <th>{idx + 1}</th>
+                  <th>
+                  {idx+1}
+                  </th>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
                   <td>
