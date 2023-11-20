@@ -14,6 +14,7 @@ import Cart from "../Dashboard/Cart/Cart";
 import AllUsers from "../Dashboard/All Users/AllUsers";
 import AddItems from "../Dashboard/Add Items/AddItems";
 import AdminRoute from "./AdminRoute";
+import ManageItems from "../Dashboard/Manage Items/ManageItems";
 
 export const router = createBrowserRouter([
     {
@@ -63,6 +64,10 @@ export const router = createBrowserRouter([
         {
           path: "addItems",
           element: <AdminRoute><AddItems></AddItems></AdminRoute>
+        },
+        {
+          path : "manageItems",
+          element : <AdminRoute><ManageItems></ManageItems></AdminRoute>
         }
       ]
     }
