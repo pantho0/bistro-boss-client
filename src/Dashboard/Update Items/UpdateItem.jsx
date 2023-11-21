@@ -4,7 +4,9 @@ import { FaUtensils } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import useAxiosPublic from "../../Components/Hooks/useAxiosPublic";
 import useAxiosSecure from "../../Components/Hooks/useAxiosSecure";
-
+import Swal from "sweetalert2";
+const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`
 const UpdateItem = () => {
   const item = useLoaderData();
   const {_id, name, price, recipe, category} = item
@@ -31,12 +33,12 @@ const UpdateItem = () => {
       }
       const menuRes = await axiosSecure.patch(`/menu/${_id}`, menuItem)
       console.log(menuRes.data);
-      if(menuRes.data.insertedId){
-        reset()
+      if(menuRes.data.modifiedCount > 0){
+        // reset()
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: `${data.name} is Added`,
+          title: `${data.name} is Updated`,
           showConfirmButton: false,
           timer: 1500
         });
@@ -92,7 +94,7 @@ const UpdateItem = () => {
                 <span className="label-text">Price</span>
               </label>
               <input
-                type="number"
+                type="text"
                 defaultValue={price}
                 {...register("price")}
                 placeholder="Price"

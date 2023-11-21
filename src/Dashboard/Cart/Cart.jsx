@@ -3,6 +3,7 @@ import useCart from "../../Components/Hooks/useCart";
 import { FaTrashAlt } from "react-icons/fa";
 import useAxiosSecure from "../../Components/Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const [cart, refetch] = useCart();
@@ -19,21 +20,21 @@ const Cart = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosSecure.delete(`/carts/${id}`)
-        .then((res) => {
-          
-          if (res.data.deletedCount > 0) {
-            refetch()
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success",
-            });
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        })
+        axiosSecure
+          .delete(`/carts/${id}`)
+          .then((res) => {
+            if (res.data.deletedCount > 0) {
+              refetch();
+              Swal.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success",
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     });
   };
@@ -42,7 +43,13 @@ const Cart = () => {
       <div className="flex justify-between">
         <h2 className="text-4xl">Total Items: {cart.length}</h2>
         <h2 className="text-4xl">Total Price: {totalPrice}</h2>
-        <button className="btn btn-success">Pay</button>
+        {cart.length ? (
+          <Link to={"/dashboard/payment"}>
+            <button className="btn btn-success">Pay</button>
+          </Link>
+        ) : (
+          <button disabled className="btn btn-success">Pay</button>
+        )}
       </div>
       <div>
         <div className="overflow-x-auto">
